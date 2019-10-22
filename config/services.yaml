@@ -161,4 +161,9 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-
+    admin.servicio_general:
+        class: App\Admin\ServicioGeneralAdmin
+        arguments: [~, App\Entity\Servicio, App\Controller\ServicioGeneralAdminController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Servicios, label: Servicios - General }
+        public: true
