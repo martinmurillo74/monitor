@@ -21,19 +21,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormTypeInterface;
+use Sonata\CoreBundle\Form\Type\CollectionType;
 
 use App\Application\ToolsBundle\Form\Type\DependentFilteredEntityType;
 
 
 final class ServicioGeneralAdmin extends AbstractAdmin
 {
+    
+    protected $baseRouteName = 'admin_app_servicio_general';
+    protected $baseRoutePattern = "serviciogeneral";
 
     protected $datagridValues = [
 	'_page' => 1,
         '_sort_order' => 'DESC',
         '_sort_by' => 'id',
     ];
-
+    
     
     /*protected function configureDefaultFilterValues(array &$filterValues)
     {
@@ -329,7 +333,10 @@ final class ServicioGeneralAdmin extends AbstractAdmin
 		->add('hsfinalizacion', DatePickerType::class, array('format' => 'yyyy-MM-dd hh:mm', 'label'=>'Finalización', 'required' => false))
 
 
-		->add('movilid')
+		->add('movilId', CollectionType::class, array('label' => "Movil", 'btn_add' => 'Agregar Movil'), array(
+                    'edit' => 'inline',
+                    'allow_delete' => true,
+                    'inline' => 'standard'))
 		->add('choferid', null, array('label'=>'Mecánico'))
 		->add('tipoid', null, array('label'=>'Tipo Servicio'))
 		
@@ -385,7 +392,7 @@ final class ServicioGeneralAdmin extends AbstractAdmin
             ->add('anio')
             ->add('opini')
             ->add('opfin')
-            ->add('movilid')
+            ->add('movilId')
             ->add('choferid')
             ->add('movil')
             ->add('chofer')
@@ -427,5 +434,13 @@ final class ServicioGeneralAdmin extends AbstractAdmin
             ->add('ciermov')
             ->add('otros')
             ;
+    }
+    
+    public function prePersist($object) {
+        $object->setMovilId($object->getMovilId());
+    }
+
+    public function preUpdate($object) {
+        $object->setMovilId($object->getMovilId());
     }
 }

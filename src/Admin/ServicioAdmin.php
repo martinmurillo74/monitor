@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormTypeInterface;
+use Sonata\CoreBundle\Form\Type\CollectionType;
 
 use App\Application\ToolsBundle\Form\Type\DependentFilteredEntityType;
 
@@ -341,7 +342,10 @@ final class ServicioAdmin extends AbstractAdmin
 		->add('hsfinalizacion', DatePickerType::class, array('format' => 'yyyy-MM-dd hh:mm', 'label'=>'Finalización', 'required' => false))
 
 
-		->add('movilid')
+		->add('movilId', CollectionType::class, array('label' => "Movil", 'btn_add' => 'Agregar Movil'), array(
+                    'edit' => 'inline',
+                    'allow_delete' => true,
+                    'inline' => 'standard'))
 		->add('choferid', null, array('label'=>'Mecánico'))
 		->add('tipoid', null, array('label'=>'Tipo Servicio'))
 		
@@ -397,7 +401,7 @@ final class ServicioAdmin extends AbstractAdmin
             ->add('anio')
             ->add('opini')
             ->add('opfin')
-            ->add('movilid')
+            ->add('movilId')
             ->add('choferid')
             ->add('movil')
             ->add('chofer')
@@ -439,5 +443,13 @@ final class ServicioAdmin extends AbstractAdmin
             ->add('ciermov')
             ->add('otros')
             ;
+    }
+    
+    public function prePersist($object) {
+        $object->setMovilId($object->getMovilId());
+    }
+
+    public function preUpdate($object) {
+        $object->setMovilId($object->getMovilId());
     }
 }

@@ -167,3 +167,10 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Servicios, label: Servicios - General }
         public: true
+
+    admin.servicio_movil:
+        class: App\Admin\ServicioMovilAdmin
+        arguments: [~, App\Entity\ServicioMovil, App\Controller\ServicioMovilAdminController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: ServicioMovil }
+        public: true

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Servicio
@@ -334,14 +336,9 @@ class Servicio
     private $opfin = NULL;
 
     /**
-     * @var \Movil
-     *
-     * @ORM\ManyToOne(targetEntity="Movil")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="movilid", referencedColumnName="ID")
-     * })
+     * @ORM\OneToMany(targetEntity="ServicioMovil", mappedBy="servicio", cascade={"all"}, orphanRemoval=true)
      */
-    private $movilid = NULL;
+    private $movilId;
 
     /**
      * @var \Chofer
@@ -656,6 +653,11 @@ class Servicio
      * })
      */
     private $tipoestado;    
+    
+    public function __construct()
+    {
+        $this->movilId = new ArrayCollection();
+    }
     
 
     public function getNrocaso()
@@ -1143,14 +1145,40 @@ class Servicio
         return $this;
     }
 
-    public function getMovilid()
+    /**
+     * @return Collection|ServicioMovil[]
+     */
+    public function getMovilId(): Collection
     {
-        return $this->movilid;
+        return $this->movilId;
+    }
+    
+    public function setMovilId($movilId) {
+        $this->movilId = $movilId;
+        foreach ($movilId as $item) {
+            $item->setServicio($this);
+        }
     }
 
-    public function setMovilid($movilid): self
+    public function addMovilId(ServicioMovil $movilId): self
     {
-        $this->movilid = $movilid;
+        if (!$this->movilId->contains($movilId)) {
+            $this->movilId[] = $movilId;
+            $movilId->setServicio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovilId(ServicioMovil $movilId): self
+    {
+        if ($this->movilId->contains($movilId)) {
+            $this->movilId->removeElement($movilId);
+            // set the owning side to null (unless already changed)
+            if ($movilId->getServicio() === $this) {
+                $movilId->setServicio(null);
+            }
+        }
 
         return $this;
     }
